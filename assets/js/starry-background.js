@@ -96,15 +96,8 @@
 	
 	// Animation loop
 	function animate() {
-		// Clear canvas with much darker gradient
-		const gradient = ctx.createRadialGradient(
-			canvas.width / 2, canvas.height / 2, 0,
-			canvas.width / 2, canvas.height / 2, canvas.width / 2
-		);
-		gradient.addColorStop(0, 'rgba(5, 5, 8, 0.98)');
-		gradient.addColorStop(0.5, 'rgba(10, 10, 15, 0.995)');
-		gradient.addColorStop(1, 'rgba(0, 0, 0, 1)');
-		ctx.fillStyle = gradient;
+		// Fill canvas with solid black
+		ctx.fillStyle = '#000000';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		
 		// Update and draw stars
@@ -128,9 +121,9 @@
 		const star = {
 			x: Math.random() * canvas.width,
 			y: 0,
-			vx: (Math.random() - 0.5) * 2,
-			vy: Math.random() * 3 + 2,
-			size: Math.random() * 3 + 1,
+			vx: (Math.random() - 0.5) * 1.2,
+			vy: Math.random() * 1.5 + 1.2,
+			size: Math.random() * 1 + 0.3,
 			opacity: 1,
 			trail: []
 		};
@@ -138,7 +131,7 @@
 		function updateShootingStar() {
 			star.x += star.vx;
 			star.y += star.vy;
-			star.opacity -= 0.02;
+			star.opacity -= 0.008;
 			
 			// Add to trail
 			star.trail.push({x: star.x, y: star.y, opacity: star.opacity});

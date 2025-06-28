@@ -118,7 +118,7 @@
 			overlayOpacity: 0.75,
 			popupCloserText: '',
 			popupLoaderText: '',
-			selector: '.item.thumb a.image',
+			selector: '.item.thumb a.image:not(.video-popup)',
 			caption: function($a) {
 				return $a.prev('h2').html();
 			},
@@ -437,5 +437,66 @@
 			// Start the typewriter effect
 			setTimeout(typeWriter, 2000); // Initial delay
 		})();
+
+	// Custom YouTube video popup
+	(function() {
+		var $videoOverlay = null;
+		var $videoContainer = null;
+		var $closeBtn = null;
+
+		function showVideoPopup(videoId) {
+			// Create overlay and container if not already present
+			if (!$videoOverlay) {
+				$videoOverlay = $('<div id="video-popup-overlay" style="display:flex;position:fixed;z-index:10010;top:0;left:0;width:100vw;height:100vh;background:rgba(18,21,29,0.92);justify-content:center;align-items:center;"></div>');
+				$videoContainer = $('<div id="video-popup-container" style="position:relative;width:90vw;max-width:1200px;aspect-ratio:16/9;max-height:80vh;display:flex;align-items:center;justify-content:center;background:none;"></div>');
+				$closeBtn = $('<span style="position:absolute;top:-32px;right:0;font-size:2.5em;color:#fff;cursor:pointer;z-index:10011;">&times;</span>');
+				$videoContainer.append($closeBtn);
+				$videoOverlay.append($videoContainer);
+				$('body').append($videoOverlay);
+
+				// Close on overlay click (but not when clicking the video)
+				$videoOverlay.on('mousedown', function(e) {
+					if (e.target === this) closeVideoPopup();
+				});
+				// Close on close button
+				$closeBtn.on('click', closeVideoPopup);
+				// Close on ESC
+				$(document).on('keydown.videoPopup', function(e) {
+					if ($videoOverlay.is(':visible') && (e.key === 'Escape' || e.keyCode === 27)) closeVideoPopup();
+				});
+			}
+
+			var $iframe = $('<iframe>', {
+				width: '100%',
+				height: '100%',
+				src: 'https://www.youtube.com/embed/' + videoId + '?autoplay=1',
+				frameborder: 0,
+				allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+				allowfullscreen: true,
+				style: 'border-radius:12px;width:100%;height:100%;background:#000;aspect-ratio:16/9;'
+			});
+			$videoContainer.find('iframe').remove();
+			$videoContainer.append($iframe);
+			$videoOverlay.fadeIn(200);
+			$('body').addClass('is-poptrox-visible');
+		}
+
+		function closeVideoPopup() {
+			if ($videoOverlay) {
+				$videoOverlay.fadeOut(200, function() {
+					$videoContainer.find('iframe').remove();
+					$('body').removeClass('is-poptrox-visible');
+				});
+			}
+		}
+
+		// Open video popup on click
+		$(document).on('click', 'a.video-popup', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			var videoId = $(this).data('video-id');
+			if (videoId) showVideoPopup(videoId);
+		});
+	})();
 
 })(jQuery);

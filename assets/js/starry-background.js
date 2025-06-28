@@ -46,10 +46,10 @@
 			this.x = Math.random() * canvas.width;
 			this.y = Math.random() * canvas.height;
 			this.size = Math.random() * 1 + 0.2;
-			this.opacity = Math.random() * 0.8 + 0.2;
+			this.opacity = Math.random() * 0.8 + 0.5;
 			this.twinkleSpeed = Math.random() * 0.02 + 0.005;
 			this.twinklePhase = Math.random() * Math.PI * 2;
-			this.brightness = Math.random() * 0.5 + 0.5;
+			this.brightness = Math.random() * 0.6 + 0.7;
 			this.twinkleBoost = 0;
 			this.twinkleBoostTimer = 0;
 		}
